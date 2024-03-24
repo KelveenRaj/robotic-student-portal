@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
@@ -10,6 +11,8 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "amazon-cognito-identity-js": "^5.2.10",
+    "aws-amplify": "^4.3.33",
     "formik": "^2.4.5",
     "framer-motion": "^11.0.15",
     "jwt-decode": "^4.0.0",
@@ -48,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1"
   }

@@ -12,7 +12,6 @@ import IndexPage from "./pages/IndexPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import SignUpPage from "./pages/SignUpPage";
-// import Profile from "./pages/Profile"
 import Dashboard from "./pages/Dashboard";
 import Test from "./pages/TestPage";
 
@@ -29,7 +28,6 @@ const router = createBrowserRouter(
       {/* protected routes */}
       <Route element={<PrivateRoute />}>
         <Route path="dashboard" element={<Dashboard />} />
-        {/* <Route path="profile" element={<Profile />} /> */}
         <Route path="test" element={<Test />} />
       </Route>
     </Route>

@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import SteamCupLogo from "../../assets/images/STEAM Cup+.png";
 import {
   Box,
   Button,
@@ -10,59 +12,70 @@ import {
   Text,
   VStack,
   Flex,
+  Alert,
+  AlertIcon,
+  Image,
   Spinner,
+  InputGroup,
+  InputRightElement,
+  Link,
 } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Formik, Field } from "formik";
-import { useDispatch } from "react-redux";
-import { jsonParseFromStorage } from "../../utils/helper";
-import { useLoginMutation } from "../../redux/slices/app/api";
 import { setAccessToken } from "../../redux/slices/app";
+import { authenticate } from "../../services/awsAuth";
+import userpool from "../../utils/userpool";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [token, setToken] = useState({});
-  const authToken = jsonParseFromStorage("token");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const [login, { isLoading }] = useLoginMutation();
-
-  // if localStrage contains token on mount
+  // If got active user, navigate to dashboard
   useEffect(() => {
-    if (authToken?.accessToken !== undefined) {
-      navigate("/dashboard");
+    const user = userpool.getCurrentUser();
+    if (user) {
+      navigate("/dashboard", { replace: true });
     }
-  }, [authToken, navigate]);
+  }, [navigate]);
 
-  // if localStrage is empty on mount, and token is generated from handlelogin action
-  useEffect(() => {
-    if (token?.accessToken) {
-      localStorage.setItem("token", JSON.stringify(token));
-      dispatch(setAccessToken(token?.accessToken));
-      navigate("/dashboard");
-    }
-  }, [token, navigate]);
-
-  const handleLogin = async ({ username, password }) => {
-    try {
-      const res = await login({ username, password }).unwrap();
-      const { token } = res;
-      setToken({ accessToken: token });
-    } catch (err) {
-      console.log(err?.data?.message || err.error);
-    }
+  const handleLogin = ({ email, password }) => {
+    setError(null);
+    setLoading(true);
+    authenticate(email, password)
+      .then((data) => {
+        dispatch(setAccessToken(data));
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        setError(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <Box bg="white" p={6} rounded="md" w={80} alignItems="center">
       <Flex align="center" justify="center" p="10px">
-        {isLoading && <Spinner size="xl" color="blue.500" zIndex="9999" />}
+        <Image src={SteamCupLogo} alt="SteamCup Logo" width={36} />
+      </Flex>
+      <Flex align="center" justify="center" p="10px">
         <Text fontSize="24px" fontWeight="500">
           Login
         </Text>
       </Flex>
+      {error && (
+        <Alert marginBottom={5} status="error">
+          <AlertIcon />
+          {error.message}
+        </Alert>
+      )}
       <Formik
         initialValues={{
-          username: "",
+          email: "",
           password: "",
         }}
         onSubmit={(values) => handleLogin(values)}
@@ -70,41 +83,68 @@ const LoginPage = () => {
         {({ handleSubmit, errors, touched }) => (
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} align="flex-start">
-              <FormControl>
+              <FormControl isInvalid={!!errors.email && touched.email}>
                 <FormLabel htmlFor="email">Email Address</FormLabel>
                 <Field
                   as={Input}
-                  id="username"
-                  name="username"
-                  type="text"
-                  variant="filled"
-                />
-              </FormControl>
-              <FormControl isInvalid={!!errors.password && touched.password}>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <Field
-                  as={Input}
-                  id="password"
-                  name="password"
-                  type="password"
+                  id="email"
+                  name="email"
+                  type="email"
                   variant="filled"
                   validate={(value) => {
-                    if (value.length < 6) {
-                      return "Password should be over 6 characters.";
+                    if (!value) {
+                      return "Email is required";
+                    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                      return "Invalid email address";
                     }
                   }}
                 />
+                <FormErrorMessage>{errors.email}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.password && touched.password}>
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <InputGroup>
+                  <Field
+                    as={Input}
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    variant="filled"
+                    validate={(value) => {
+                      if (value.length < 6) {
+                        return "Password should be over 6 characters.";
+                      }
+                    }}
+                  />
+                  <InputRightElement h={"full"}>
+                    <Button
+                      variant={"ghost"}
+                      onClick={() =>
+                        setShowPassword((showPassword) => !showPassword)
+                      }
+                    >
+                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
                 <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>
-              <Button type="submit" colorScheme="green" w="full">
-                Login
+              <Button type="submit" colorScheme="blue" w="full">
+                {loading ? <Spinner size="sm" color="white" /> : "Login"}
               </Button>
-              <span>
-                New to RobotClub?{" "}
-                <a href="/sign-up" style={{ color: "red" }}>
-                  Sign Up Now
-                </a>
-              </span>
+              <Flex justifyContent="center" w="100%" mt={"5px"}>
+                <Link href="/forgot-password" color={"blue.500"}>
+                  Forget Password?
+                </Link>
+              </Flex>
+              <Flex justifyContent="center" w="100%" mt={"5px"}>
+                <Text>
+                  New user?{" "}
+                  <Link href="/sign-up" color={"red"}>
+                    Sign Up Now
+                  </Link>
+                </Text>
+              </Flex>
             </VStack>
           </form>
         )}
