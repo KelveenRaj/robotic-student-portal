@@ -8,15 +8,8 @@ export const appApi = baseApiSlice.injectEndpoints({
           url: "center?status=Assigned",
         }),
       }),
-      studentSignUp: builder.mutation({
-        query: (payload) => ({
-          url: "/user/student",
-          method: "POST",
-          body: payload,
-        }),
-      }),
     };
   },
 });
 
-export const { useGetActiveCentresQuery, useStudentSignUpMutation } = appApi;
+export const { useGetActiveCentresQuery } = appApi;

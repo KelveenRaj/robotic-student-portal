@@ -41,6 +41,10 @@ const signUpSchema = Yup.object().shape({
   parentContact: Yup.string().required("Parent contact number is required"),
 });
 
+const verifySchema = Yup.object().shape({
+  code: Yup.string().required("otp is required"),
+});
+
 const forgotPasswordSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email address")
@@ -54,4 +58,10 @@ const resetPasswordSchema = Yup.object().shape({
   otp: Yup.string().required("otp is required"),
 });
 
-export { loginSchema, signUpSchema, forgotPasswordSchema, resetPasswordSchema };
+export {
+  loginSchema,
+  signUpSchema,
+  verifySchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+};
