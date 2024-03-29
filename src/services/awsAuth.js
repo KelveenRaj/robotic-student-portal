@@ -23,3 +23,39 @@ export const authenticate = (Email, Password) => {
     });
   });
 };
+
+export const forgotPassword = (Email) => {
+  return new Promise((resolve, reject) => {
+    const user = new CognitoUser({
+      Username: Email,
+      Pool: userpool,
+    });
+
+    user.forgotPassword({
+      onSuccess: (result) => {
+        resolve(result);
+      },
+      onFailure: (err) => {
+        reject(err);
+      },
+    });
+  });
+};
+
+export const resetPasswordWithOTP = (Email, newPassword, otp) => {
+  return new Promise((resolve, reject) => {
+    const user = new CognitoUser({
+      Username: Email,
+      Pool: userpool,
+    });
+
+    user.confirmPassword(otp, newPassword, {
+      onSuccess: () => {
+        resolve();
+      },
+      onFailure: (err) => {
+        reject(err);
+      },
+    });
+  });
+};

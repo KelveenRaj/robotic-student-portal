@@ -3,7 +3,7 @@ import { setAccessToken } from "./slices/app";
 import { jsonParseFromStorage } from "../utils/helper";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "",
+  baseUrl: process.env.REACT_APP_BASE_API,
   prepareHeaders: (headers, { getState }) => {
     const token = getState().app?.accessToken ?? "";
     headers.set("Authorization", `Bearer ${token}`);

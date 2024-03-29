@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import SteamCupLogo from "../../assets/images/STEAM Cup+.png";
 import {
   Box,
@@ -22,18 +21,16 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Formik, Field } from "formik";
-import { setAccessToken } from "../../redux/slices/app";
 import { authenticate } from "../../services/awsAuth";
 import userpool from "../../utils/userpool";
+import { loginSchema } from "../../utils/validationSchema";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // If got active user, navigate to dashboard
   useEffect(() => {
     const user = userpool.getCurrentUser();
     if (user) {
@@ -45,8 +42,7 @@ const LoginPage = () => {
     setError(null);
     setLoading(true);
     authenticate(email, password)
-      .then((data) => {
-        dispatch(setAccessToken(data));
+      .then(() => {
         navigate("/dashboard");
       })
       .catch((err) => {
@@ -79,11 +75,12 @@ const LoginPage = () => {
           password: "",
         }}
         onSubmit={(values) => handleLogin(values)}
+        validationSchema={loginSchema}
       >
         {({ handleSubmit, errors, touched }) => (
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} align="flex-start">
-              <FormControl isInvalid={!!errors.email && touched.email}>
+              <FormControl isInvalid={errors.email && touched.email} w="100%">
                 <FormLabel htmlFor="email">Email Address</FormLabel>
                 <Field
                   as={Input}
@@ -91,17 +88,13 @@ const LoginPage = () => {
                   name="email"
                   type="email"
                   variant="filled"
-                  validate={(value) => {
-                    if (!value) {
-                      return "Email is required";
-                    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                      return "Invalid email address";
-                    }
-                  }}
                 />
                 <FormErrorMessage>{errors.email}</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={!!errors.password && touched.password}>
+              <FormControl
+                isInvalid={errors.password && touched.password}
+                w="100%"
+              >
                 <FormLabel htmlFor="password">Password</FormLabel>
                 <InputGroup>
                   <Field
@@ -110,11 +103,6 @@ const LoginPage = () => {
                     name="password"
                     type={showPassword ? "text" : "password"}
                     variant="filled"
-                    validate={(value) => {
-                      if (value.length < 6) {
-                        return "Password should be over 6 characters.";
-                      }
-                    }}
                   />
                   <InputRightElement h={"full"}>
                     <Button
@@ -132,23 +120,23 @@ const LoginPage = () => {
               <Button type="submit" colorScheme="blue" w="full">
                 {loading ? <Spinner size="sm" color="white" /> : "Login"}
               </Button>
-              <Flex justifyContent="center" w="100%" mt={"5px"}>
-                <Link href="/forgot-password" color={"blue.500"}>
-                  Forget Password?
-                </Link>
-              </Flex>
-              <Flex justifyContent="center" w="100%" mt={"5px"}>
-                <Text>
-                  New user?{" "}
-                  <Link href="/sign-up" color={"red"}>
-                    Sign Up Now
-                  </Link>
-                </Text>
-              </Flex>
             </VStack>
           </form>
         )}
       </Formik>
+      <Flex justifyContent="center" w="100%" mt={"15px"}>
+        <Link href="/forgot-password" color={"blue.500"}>
+          Forgot Password?
+        </Link>
+      </Flex>
+      <Flex justifyContent="center" w="100%" mt={"15px"}>
+        <Text>
+          New user?{" "}
+          <Link href="/sign-up" color={"red"}>
+            Sign Up Now
+          </Link>
+        </Text>
+      </Flex>
     </Box>
   );
 };

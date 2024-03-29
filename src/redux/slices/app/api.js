@@ -1,18 +1,22 @@
 import { baseApiSlice } from "../../createAppApi";
-const BASE_PATH = "https://dummyjson.com";
 
 export const appApi = baseApiSlice.injectEndpoints({
   endpoints: (builder) => {
     return {
-      login: builder.mutation({
-        query: (data) => ({
-          url: `${BASE_PATH}/auth/login`,
+      getActiveCentres: builder.query({
+        query: () => ({
+          url: "center?status=Assigned",
+        }),
+      }),
+      studentSignUp: builder.mutation({
+        query: (payload) => ({
+          url: "/user/student",
           method: "POST",
-          body: data,
+          body: payload,
         }),
       }),
     };
   },
 });
 
-export const { useLoginMutation } = appApi;
+export const { useGetActiveCentresQuery, useStudentSignUpMutation } = appApi;
