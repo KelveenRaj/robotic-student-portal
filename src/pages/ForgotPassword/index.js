@@ -91,8 +91,8 @@ const ForgotPassword = () => {
             <form onSubmit={handleSubmit}>
               <VStack spacing={4} align="flex-start">
                 <Text fontSize="14px" fontWeight="500">
-                  Enter your email and we&apos;ll send you a verification code
-                  to reset your password.
+                  Please enter your email below and we&apos;ll send you a
+                  verification code to reset your password.
                 </Text>
 
                 <FormControl isInvalid={errors.email && touched.email} w="100%">

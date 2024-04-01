@@ -8,8 +8,13 @@ export const appApi = baseApiSlice.injectEndpoints({
           url: "center?status=Assigned",
         }),
       }),
+      getUserData: builder.query({
+        query: () => ({
+          url: "/user",
+        }),
+      }),
     };
   },
 });
 
-export const { useGetActiveCentresQuery } = appApi;
+export const { useGetActiveCentresQuery, useGetUserDataQuery } = appApi;

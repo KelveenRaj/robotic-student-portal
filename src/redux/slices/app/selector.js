@@ -9,7 +9,7 @@ export const makeSelectUserData = () =>
   createSelector(selectApp, (appState) => appState.userData);
 
 export const makeSelectUserName = () =>
-  createSelector(selectApp, (appState) => appState.userData?.firstName);
+  createSelector(selectApp, (appState) => appState.userData?.fullName);
 
-export const makeSelectUserRole = () =>
-  createSelector(selectApp, (appState) => appState.userData?.role);
+export const makeSelectUserStatus = () =>
+  createSelector(selectApp, (appState) => appState.userData?.status);

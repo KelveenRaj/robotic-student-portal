@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import * as Yup from "yup";
 
 const loginSchema = Yup.object().shape({
@@ -18,19 +19,28 @@ const signUpSchema = Yup.object().shape({
     .required("Email is required"),
   password: Yup.string()
     .min(6, "Password should be at least 6 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\\\|\[\]{};:'",.<>?]).{6,}$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one symbol, and one number"
+    )
     .required("Password is required"),
   center: Yup.string().required("Center is required"),
-  nric: Yup.string().required("My Kad / NRIC is required"),
-  contact: Yup.string().required("Personal contact number is required"),
+  nric: Yup.string()
+    .optional()
+    .matches(/^(?:\d{6}-\d{2}-\d{4}|[A-Z0-9]{5,20})$/, "Invalid My Kad / NRIC"),
+  passport: Yup.string().optional(),
+  contact: Yup.string()
+    .trim()
+    .optional()
+    .matches(
+      /^(\+?6?01)[02-46-9]-*[0-9]{7}$|^(\+?6?01)[1]-*[0-9]{8}$/,
+      "Invalid phone number. Please use a valid Malaysian phone number."
+    ),
   race: Yup.string().required("Race is required"),
-  personalEmail: Yup.string()
-    .email("Invalid email address")
-    .required("Personal Email is required"),
-  moeEmail: Yup.string()
-    .email("Invalid email address")
-    .required("Moe Email is required"),
+  moeEmail: Yup.string().optional().email("Invalid email address"),
   school: Yup.string().required("School is required"),
   nationality: Yup.string().required("Nationality is required"),
+  othersNationality: Yup.string().optional(),
   parentName: Yup.string().required("Parent Name is required"),
   relationship: Yup.string().required(
     "Parent/Guardian relationship is required"
@@ -38,7 +48,13 @@ const signUpSchema = Yup.object().shape({
   parentEmail: Yup.string()
     .email("Invalid email address")
     .required("Parent email is required"),
-  parentContact: Yup.string().required("Parent contact number is required"),
+  parentContact: Yup.string()
+    .trim()
+    .required("Parent contact number is required")
+    .matches(
+      /^(\+?6?01)[02-46-9]-*[0-9]{7}$|^(\+?6?01)[1]-*[0-9]{8}$/,
+      "Invalid phone number. Please use a valid Malaysian phone number."
+    ),
 });
 
 const verifySchema = Yup.object().shape({

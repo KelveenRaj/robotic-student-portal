@@ -46,12 +46,13 @@ const SignUpPage = () => {
     password: "",
     center: "",
     nric: "",
+    passport: "",
     contact: "",
     race: "",
-    personalEmail: "", //TODO: Remove field completely
     moeEmail: "",
     school: "",
     nationality: "",
+    othersNationality: "",
     parentName: "",
     relationship: "",
     parentEmail: "",
@@ -87,12 +88,16 @@ const SignUpPage = () => {
     try {
       const encryptedPassword = await performRSAEncryption(values.password);
       const updatedDOB = formatDate(values.dob);
-
+      const updatedNationality =
+        values.nationality === "malaysia"
+          ? values.nationality
+          : values.othersNationality;
       if (encryptedPassword) {
         const updatedValues = {
           ...values,
           password: encryptedPassword,
           dob: updatedDOB,
+          nationality: updatedNationality,
         };
         const response = await signUp(updatedValues);
         console.log(response);
@@ -186,7 +191,7 @@ const SignUpPage = () => {
           }}
           validationSchema={signUpSchema}
         >
-          {({ handleSubmit, isValid, errors, touched }) => (
+          {({ handleSubmit, isValid, errors, touched, values }) => (
             <form onSubmit={handleSubmit}>
               {step === 1 && (
                 <VStack spacing={4} align="flex-start">
@@ -205,7 +210,12 @@ const SignUpPage = () => {
                     isInvalid={errors.parentName && touched.parentName}
                     w="100%"
                   >
-                    <FormLabel htmlFor="parentName">Name</FormLabel>
+                    <FormLabel htmlFor="parentName">
+                      Name{" "}
+                      <Text as="span" color="red">
+                        *
+                      </Text>
+                    </FormLabel>
                     <Field
                       as={Input}
                       id="parentName"
@@ -221,7 +231,10 @@ const SignUpPage = () => {
                     w="100%"
                   >
                     <FormLabel htmlFor="relationship">
-                      Relationship to student
+                      Relationship to student{" "}
+                      <Text as="span" color="red">
+                        *
+                      </Text>
                     </FormLabel>
                     <Field
                       as={Select}
@@ -241,7 +254,12 @@ const SignUpPage = () => {
                     isInvalid={errors.parentEmail && touched.parentEmail}
                     w="100%"
                   >
-                    <FormLabel htmlFor="parentEmail">Email</FormLabel>
+                    <FormLabel htmlFor="parentEmail">
+                      Email{" "}
+                      <Text as="span" color="red">
+                        *
+                      </Text>
+                    </FormLabel>
                     <Field
                       as={Input}
                       id="parentEmail"
@@ -257,7 +275,10 @@ const SignUpPage = () => {
                     w="100%"
                   >
                     <FormLabel htmlFor="parentContact">
-                      Contact Number
+                      Contact Number{" "}
+                      <Text as="span" color="red">
+                        *
+                      </Text>
                     </FormLabel>
                     <Field
                       as={Input}
@@ -282,7 +303,10 @@ const SignUpPage = () => {
                     w="100%"
                   >
                     <FormLabel htmlFor="fullName">
-                      Full Name as per NRIC
+                      Full Name as per NRIC{" "}
+                      <Text as="span" color="red">
+                        *
+                      </Text>
                     </FormLabel>
                     <Field
                       as={Input}
@@ -294,57 +318,105 @@ const SignUpPage = () => {
                     <FormErrorMessage>{errors.fullName}</FormErrorMessage>
                   </FormControl>
 
-                  <Grid templateColumns="repeat(2, 1fr)" gap={4} w="100%">
-                    <FormControl
-                      isInvalid={errors.gender && touched.gender}
-                      w="100%"
-                    >
-                      <FormLabel htmlFor="gender">Gender</FormLabel>
-                      <Field
-                        as={Select}
-                        id="gender"
-                        name="gender"
-                        placeholder="Select"
-                        variant="filled"
-                      >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                      </Field>
-                      <FormErrorMessage>{errors.gender}</FormErrorMessage>
-                    </FormControl>
-                    <FormControl isInvalid={errors.dob && touched.dob} w="100%">
-                      <FormLabel htmlFor="dob">Date of Birth</FormLabel>
-                      <Field
-                        as={Input}
-                        id="dob"
-                        name="dob"
-                        type="date"
-                        variant="filled"
-                      />
-                      <FormErrorMessage>{errors.dob}</FormErrorMessage>
-                    </FormControl>
-                  </Grid>
-
-                  <FormControl isInvalid={errors.nric && touched.nric} w="100%">
-                    <FormLabel htmlFor="nric">
-                      My Kad / NRIC / Passport
+                  <FormControl
+                    isInvalid={errors.nationality && touched.nationality}
+                    w="100%"
+                  >
+                    <FormLabel htmlFor="nationality">
+                      Nationality{" "}
+                      <Text as="span" color="red">
+                        *
+                      </Text>
                     </FormLabel>
                     <Field
-                      as={Input}
-                      id="nric"
-                      name="nric"
+                      as={Select}
+                      id="nationality"
+                      name="nationality"
                       type="text"
                       variant="filled"
-                    />
-                    <FormErrorMessage>{errors.nric}</FormErrorMessage>
+                      placeholder="Select nationality"
+                    >
+                      <option value="malaysia">Malaysian</option>
+                      <option value="others">Others</option>
+                    </Field>
+                    <FormErrorMessage>{errors.nationality}</FormErrorMessage>
                   </FormControl>
+
+                  {values.nationality === "others" && (
+                    <FormControl
+                      isInvalid={
+                        errors.othersNationality && touched.othersNationality
+                      }
+                      w="100%"
+                    >
+                      <Field
+                        as={Input}
+                        id="othersNationality"
+                        name="othersNationality"
+                        type="text"
+                        variant="filled"
+                        placeholder="Please input your nationality"
+                      />
+                      <FormErrorMessage>
+                        {errors.othersNationality}
+                      </FormErrorMessage>
+                    </FormControl>
+                  )}
+
+                  {values.nationality &&
+                    (values.nationality === "malaysia" ? (
+                      <FormControl
+                        isInvalid={errors.nric && touched.nric}
+                        w="100%"
+                      >
+                        <FormLabel htmlFor="nric">
+                          My Kad / NRIC{" "}
+                          <Text as="span" color="red">
+                            *
+                          </Text>
+                        </FormLabel>
+                        <Field
+                          as={Input}
+                          id="nric"
+                          name="nric"
+                          type="text"
+                          variant="filled"
+                        />
+                        <FormErrorMessage>{errors.nric}</FormErrorMessage>
+                      </FormControl>
+                    ) : (
+                      <FormControl
+                        isInvalid={errors.passport && touched.passport}
+                        w="100%"
+                      >
+                        <FormLabel htmlFor="passport">
+                          Passport{" "}
+                          <Text as="span" color="red">
+                            *
+                          </Text>
+                        </FormLabel>
+                        <Field
+                          as={Input}
+                          id="passport"
+                          name="passport"
+                          type="text"
+                          variant="filled"
+                        />
+                        <FormErrorMessage>{errors.passport}</FormErrorMessage>
+                      </FormControl>
+                    ))}
 
                   <Grid templateColumns="repeat(2, 1fr)" gap={4} w="100%">
                     <FormControl
                       isInvalid={errors.race && touched.race}
                       w="100%"
                     >
-                      <FormLabel htmlFor="race">Race</FormLabel>
+                      <FormLabel htmlFor="race">
+                        Race{" "}
+                        <Text as="span" color="red">
+                          *
+                        </Text>
+                      </FormLabel>
                       <Field
                         as={Select}
                         id="race"
@@ -360,20 +432,88 @@ const SignUpPage = () => {
                       <FormErrorMessage>{errors.race}</FormErrorMessage>
                     </FormControl>
                     <FormControl
-                      isInvalid={errors.nationality && touched.nationality}
+                      isInvalid={errors.gender && touched.gender}
                       w="100%"
                     >
-                      <FormLabel htmlFor="nationality">Nationality</FormLabel>
+                      <FormLabel htmlFor="gender">
+                        Gender{" "}
+                        <Text as="span" color="red">
+                          *
+                        </Text>
+                      </FormLabel>
                       <Field
-                        as={Input}
-                        id="nationality"
-                        name="nationality"
-                        type="text"
+                        as={Select}
+                        id="gender"
+                        name="gender"
+                        placeholder="Select"
                         variant="filled"
-                      />
-                      <FormErrorMessage>{errors.nationality}</FormErrorMessage>
+                      >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                      </Field>
+                      <FormErrorMessage>{errors.gender}</FormErrorMessage>
                     </FormControl>
                   </Grid>
+
+                  <FormControl isInvalid={errors.dob && touched.dob} w="100%">
+                    <FormLabel htmlFor="dob">
+                      Date of Birth{" "}
+                      <Text as="span" color="red">
+                        *
+                      </Text>
+                    </FormLabel>
+                    <Field
+                      as={Input}
+                      id="dob"
+                      name="dob"
+                      type="date"
+                      variant="filled"
+                    />
+                    <FormErrorMessage>{errors.dob}</FormErrorMessage>
+                  </FormControl>
+                </VStack>
+              )}
+
+              {step === 3 && (
+                <VStack spacing={4} align="flex-start">
+                  <Text fontSize="16px" fontWeight="700">
+                    Student Detail&apos;s
+                  </Text>
+
+                  <FormControl
+                    isInvalid={errors.school && touched.school}
+                    w="100%"
+                  >
+                    <FormLabel htmlFor="school">
+                      School{" "}
+                      <Text as="span" color="red">
+                        *
+                      </Text>
+                    </FormLabel>
+                    <Field
+                      as={Input}
+                      id="school"
+                      name="school"
+                      type="text"
+                      variant="filled"
+                    />
+                    <FormErrorMessage>{errors.school}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl
+                    isInvalid={errors.moeEmail && touched.moeEmail}
+                    w="100%"
+                  >
+                    <FormLabel htmlFor="moeEmail">Moe Email</FormLabel>
+                    <Field
+                      as={Input}
+                      id="moeEmail"
+                      name="moeEmail"
+                      type="email"
+                      variant="filled"
+                    />
+                    <FormErrorMessage>{errors.moeEmail}</FormErrorMessage>
+                  </FormControl>
 
                   <FormControl
                     isInvalid={errors.contact && touched.contact}
@@ -391,20 +531,60 @@ const SignUpPage = () => {
                     />
                     <FormErrorMessage>{errors.contact}</FormErrorMessage>
                   </FormControl>
+
+                  <FormControl
+                    isInvalid={errors.center && touched.center}
+                    w="100%"
+                  >
+                    <FormLabel htmlFor="center">
+                      Centre{" "}
+                      <Text as="span" color="red">
+                        *
+                      </Text>
+                    </FormLabel>
+                    <Field
+                      as={Select}
+                      id="center"
+                      name="center"
+                      placeholder="Select Centre"
+                      variant="filled"
+                    >
+                      {activeCentres &&
+                        activeCentres.data.map((center) => (
+                          <option key={center.id} value={center.id}>
+                            {center.name}
+                          </option>
+                        ))}
+                    </Field>
+                    <FormErrorMessage>{errors.center}</FormErrorMessage>
+                  </FormControl>
                 </VStack>
               )}
 
-              {step === 3 && (
+              {step === 4 && (
                 <VStack spacing={4} align="flex-start">
                   <Text fontSize="16px" fontWeight="700">
                     Student Detail&apos;s
+                    <Text fontSize="14px" fontWeight="500">
+                      To finish setting up your account, please enter a valid
+                      email address and password.
+                    </Text>
                   </Text>
 
                   <FormControl
                     isInvalid={errors.email && touched.email}
                     w="100%"
                   >
-                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormLabel
+                      htmlFor="email"
+                      display="flex"
+                      alignItems="center"
+                    >
+                      Email{" "}
+                      <Text as="span" color="red" ml="1">
+                        *
+                      </Text>
+                    </FormLabel>
                     <Field
                       as={Input}
                       id="email"
@@ -419,7 +599,12 @@ const SignUpPage = () => {
                     isInvalid={errors.password && touched.password}
                     w="100%"
                   >
-                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormLabel htmlFor="password">
+                      Password{" "}
+                      <Text as="span" color="red" ml="1">
+                        *
+                      </Text>
+                    </FormLabel>
                     <InputGroup>
                       <Field
                         as={Input}
@@ -441,75 +626,6 @@ const SignUpPage = () => {
                     </InputGroup>
                     <FormErrorMessage>{errors.password}</FormErrorMessage>
                   </FormControl>
-
-                  <FormControl
-                    isInvalid={errors.personalEmail && touched.personalEmail}
-                    w="100%"
-                  >
-                    <FormLabel htmlFor="personalEmail">
-                      Personal Email
-                    </FormLabel>
-                    <Field
-                      as={Input}
-                      id="personalEmail"
-                      name="personalEmail"
-                      type="email"
-                      variant="filled"
-                    />
-                    <FormErrorMessage>{errors.personalEmail}</FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl
-                    isInvalid={errors.moeEmail && touched.moeEmail}
-                    w="100%"
-                  >
-                    <FormLabel htmlFor="moeEmail">Moe Email</FormLabel>
-                    <Field
-                      as={Input}
-                      id="moeEmail"
-                      name="moeEmail"
-                      type="email"
-                      variant="filled"
-                    />
-                    <FormErrorMessage>{errors.moeEmail}</FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl
-                    isInvalid={errors.school && touched.school}
-                    w="100%"
-                  >
-                    <FormLabel htmlFor="school">School</FormLabel>
-                    <Field
-                      as={Input}
-                      id="school"
-                      name="school"
-                      type="text"
-                      variant="filled"
-                    />
-                    <FormErrorMessage>{errors.school}</FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl
-                    isInvalid={errors.center && touched.center}
-                    w="100%"
-                  >
-                    <FormLabel htmlFor="center">Centre</FormLabel>
-                    <Field
-                      as={Select}
-                      id="center"
-                      name="center"
-                      placeholder="Select Centre"
-                      variant="filled"
-                    >
-                      {activeCentres &&
-                        activeCentres.data.map((center) => (
-                          <option key={center.id} value={center.id}>
-                            {center.name}
-                          </option>
-                        ))}
-                    </Field>
-                    <FormErrorMessage>{errors.center}</FormErrorMessage>
-                  </FormControl>
                 </VStack>
               )}
 
@@ -530,6 +646,16 @@ const SignUpPage = () => {
                   </>
                 )}
                 {step === 3 && (
+                  <>
+                    <Button onClick={handlePrevStep} colorScheme="gray">
+                      Previous
+                    </Button>
+                    <Button onClick={handleNextStep} colorScheme="blue">
+                      Next
+                    </Button>
+                  </>
+                )}
+                {step === 4 && (
                   <>
                     <Button onClick={handlePrevStep} colorScheme="gray">
                       Previous
