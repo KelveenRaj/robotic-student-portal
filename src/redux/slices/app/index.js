@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   accessToken: null,
-  userData: null,
+  userData: {},
 };
 
 const appSlice = createSlice({

@@ -89,9 +89,9 @@ const SignUpPage = () => {
       const encryptedPassword = await performRSAEncryption(values.password);
       const updatedDOB = formatDate(values.dob);
       const updatedNationality =
-        values.nationality === "malaysia"
-          ? values.nationality
-          : values.othersNationality;
+        values.othersNationality !== ""
+          ? values.othersNationality
+          : values.nationality;
       if (encryptedPassword) {
         const updatedValues = {
           ...values,
@@ -100,7 +100,6 @@ const SignUpPage = () => {
           nationality: updatedNationality,
         };
         const response = await signUp(updatedValues);
-        console.log(response);
         if (response?.success) {
           setLoading(false);
           setIsVerify(true);
@@ -122,7 +121,6 @@ const SignUpPage = () => {
       };
 
       const response = await verifyOtp(payload);
-      console.log(response);
       if (response?.success) {
         setLoading(false);
         navigate("/login");

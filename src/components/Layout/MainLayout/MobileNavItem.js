@@ -31,6 +31,8 @@ const MobileNav = ({ onOpen, onLogout, onClickProfile, ...props }) => {
       setCurrentPage("Dashboard");
     } else if (currentLocation === "/test") {
       setCurrentPage("Test");
+    } else if (currentLocation === "/profile") {
+      setCurrentPage("Profile");
     } else {
       setCurrentPage("unknown");
     }
@@ -58,7 +60,6 @@ const MobileNav = ({ onOpen, onLogout, onClickProfile, ...props }) => {
       <Text
         display={{ base: "flex", md: "none" }}
         fontSize="2xl"
-        fontFamily="monospace"
         fontWeight="bold"
         ml="8"
         color="#27374d"

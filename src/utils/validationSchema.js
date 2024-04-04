@@ -25,10 +25,22 @@ const signUpSchema = Yup.object().shape({
     )
     .required("Password is required"),
   center: Yup.string().required("Center is required"),
-  nric: Yup.string()
-    .optional()
-    .matches(/^(?:\d{6}-\d{2}-\d{4}|[A-Z0-9]{5,20})$/, "Invalid My Kad / NRIC"),
-  passport: Yup.string().optional(),
+  nric: Yup.string().when("nationality", {
+    is: (nationality) => nationality === "malaysia",
+    then: (schema) =>
+      schema
+        .required("My Kad / NRIC is required")
+        .matches(
+          /^(?:\d{6}-\d{2}-\d{4}|[A-Z0-9]{5,20})$/,
+          "Invalid My Kad / NRIC"
+        ),
+    otherwise: (schema) => schema,
+  }),
+  passport: Yup.string().when("nationality", {
+    is: (nationality) => nationality !== "malaysia",
+    then: (schema) => schema.required("Passport is required"),
+    otherwise: (schema) => schema,
+  }),
   contact: Yup.string()
     .trim()
     .optional()
