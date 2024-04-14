@@ -13,6 +13,7 @@ import {
 import SidebarContent from "./SideBarContent";
 import MobileNav from "./MobileNavItem";
 import MaintenanceAlert from "../../MaintenanceALert";
+import userpool from "../../../utils/userpool";
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
@@ -22,6 +23,24 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     if (!isLoading && !isError && data) {
+      console.log(data?.data?.status)
+      if (data?.data?.status === "rejected") {
+        const user = userpool.getCurrentUser();
+        if (user) {
+          user.getSession((err, session) => {
+            if (!err && session) {
+              user.deleteUser((deleteErr, result) => {
+                if (deleteErr) {
+                  console.error("Error deleting user:", deleteErr);
+                } else {
+                  console.log("Successfully deleted user:", result);
+                  navigate("/login", { replace: true });
+                }
+              });
+            }
+          });
+        }
+      }
       dispatch(saveUserData(data?.data));
     } else if (isError) {
       onLogout();

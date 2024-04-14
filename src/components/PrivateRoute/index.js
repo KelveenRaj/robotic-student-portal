@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, 
+  // useSelector
+ } from "react-redux";
 import { Flex, Spinner } from "@chakra-ui/react";
 import { setAccessToken } from "../../redux/slices/app";
+// import { makeSelectUserData } from "../../redux/slices/app/selector";
 import userpool from "../../utils/userpool";
 
 const PrivateRoute = () => {
@@ -10,6 +13,8 @@ const PrivateRoute = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [isReady, setIsReady] = useState(false);
+
+  // const userData = useSelector(makeSelectUserData());
 
   useEffect(() => {
     const user = userpool.getCurrentUser();
@@ -29,7 +34,28 @@ const PrivateRoute = () => {
         }
       });
     }
-  }, [navigate]);
+  }, []);
+
+  // useEffect(() => {
+  //   console.log("checking");
+  //   if (userData?.status === "rejected") {
+  //     const user = userpool.getCurrentUser();
+  //     if (user) {
+  //       user.getSession((err, session) => {
+  //         if (!err && session) {
+  //           user.deleteUser((deleteErr, result) => {
+  //             if (deleteErr) {
+  //               console.error("Error deleting user:", deleteErr);
+  //             } else {
+  //               console.log("Successfully deleted user:", result);
+  //               navigate("/login", { replace: true });
+  //             }
+  //           });
+  //         }
+  //       });
+  //     }
+  //   }
+  // }, [userData]);
 
   if (isLoading) {
     return (
