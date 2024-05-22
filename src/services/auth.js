@@ -41,7 +41,7 @@ const logout = async (token) => {
     );
     return response?.data;
   } catch (error) {
-    throw new Error("Error during logout: " + error.response.data.message);
+    console.error("Error during logout: " + error.response.data.message);
   }
 };
 
