@@ -24,6 +24,7 @@ import { Formik, Field } from "formik";
 import { authenticate } from "../../services/awsAuth";
 import userpool from "../../utils/userpool";
 import { loginSchema } from "../../utils/validationSchema";
+import { generateAccessToken } from "../../services/auth";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -31,19 +32,33 @@ const LoginPage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const authTokens = JSON.parse(localStorage.getItem("token"));
+
   useEffect(() => {
     const user = userpool.getCurrentUser();
-    if (user) {
+    if (user && authTokens?.accessToken) {
       navigate("/dashboard", { replace: true });
     }
-  }, [navigate]);
+  }, [userpool, authTokens]);
+
+  const initAuth = async (cognitoToken) => {
+    const tokenPayload = await generateAccessToken(cognitoToken);
+    if (tokenPayload) {
+      localStorage.setItem("token", JSON.stringify(tokenPayload));
+      setLoading(false);
+      navigate("/dashboard", { replace: true });
+    } else {
+      navigate("/logout", { replace: true });
+    }
+  };
 
   const handleLogin = ({ email, password }) => {
     setError(null);
     setLoading(true);
     authenticate(email, password)
-      .then(() => {
-        navigate("/dashboard");
+      .then((userSession) => {
+        const cognitoToken = userSession.getAccessToken().getJwtToken();
+        initAuth(cognitoToken);
       })
       .catch((err) => {
         setError(err);

@@ -13,17 +13,18 @@ import {
 import SidebarContent from "./SideBarContent";
 import MobileNav from "./MobileNavItem";
 import MaintenanceAlert from "../../MaintenanceALert";
+import AnimatedPage from "../../AnimatedPage";
+import Spin from "../../Spin";
 import userpool from "../../../utils/userpool";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, isLoading }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const { data, isLoading, isError } = useGetUserDataQuery();
+  const { data, isLoading: isUserLoading, isError } = useGetUserDataQuery();
 
   useEffect(() => {
-    if (!isLoading && !isError && data) {
-      console.log(data?.data?.status)
+    if (!isUserLoading && !isError && data) {
       if (data?.data?.status === "rejected") {
         const user = userpool.getCurrentUser();
         if (user) {
@@ -82,8 +83,14 @@ const Layout = ({ children }) => {
         onClickProfile={onClickProfile}
       />
       <Box ml={{ base: 0, md: 60 }} p="4">
-        <MaintenanceAlert />
-        {children}
+        {isLoading ? (
+          <Spin />
+        ) : (
+          <AnimatedPage>
+            <MaintenanceAlert />
+            {children}
+          </AnimatedPage>
+        )}
       </Box>
     </Box>
   );
@@ -91,6 +98,11 @@ const Layout = ({ children }) => {
 
 Layout.propTypes = {
   children: PropTypes.any.isRequired,
+  isLoading: PropTypes.bool,
+};
+
+Layout.defaultProps = {
+  isLoading: false,
 };
 
 export default Layout;

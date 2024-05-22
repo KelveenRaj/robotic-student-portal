@@ -1,71 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
-import { useDispatch, 
-  // useSelector
- } from "react-redux";
 import { Flex, Spinner } from "@chakra-ui/react";
-import { setAccessToken } from "../../redux/slices/app";
-// import { makeSelectUserData } from "../../redux/slices/app/selector";
 import userpool from "../../utils/userpool";
+import Layout from "../Layout/MainLayout";
 
 const PrivateRoute = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
   const [isReady, setIsReady] = useState(false);
 
-  // const userData = useSelector(makeSelectUserData());
+  const authTokens = JSON.parse(localStorage.getItem("token"));
 
   useEffect(() => {
     const user = userpool.getCurrentUser();
-    if (!user) {
-      setIsLoading(false);
-      navigate("/login", { replace: true });
+    if (user && authTokens?.accessToken) {
+      setIsReady(true);
     } else {
-      user.getSession((err, session) => {
-        if (err) {
-          setIsLoading(false);
-          navigate("/login", { replace: true });
-        } else {
-          const token = session.getAccessToken().getJwtToken();
-          dispatch(setAccessToken(token));
-          setIsLoading(false);
-          setIsReady(true);
-        }
-      });
+      navigate("/logout", { replace: true });
     }
-  }, []);
+  }, [authTokens]);
 
-  // useEffect(() => {
-  //   console.log("checking");
-  //   if (userData?.status === "rejected") {
-  //     const user = userpool.getCurrentUser();
-  //     if (user) {
-  //       user.getSession((err, session) => {
-  //         if (!err && session) {
-  //           user.deleteUser((deleteErr, result) => {
-  //             if (deleteErr) {
-  //               console.error("Error deleting user:", deleteErr);
-  //             } else {
-  //               console.log("Successfully deleted user:", result);
-  //               navigate("/login", { replace: true });
-  //             }
-  //           });
-  //         }
-  //       });
-  //     }
-  //   }
-  // }, [userData]);
-
-  if (isLoading) {
+  if (!isReady) {
     return (
-      <Flex height="100vh" justifyContent="center" alignItems="center">
-        <Spinner size="xl" color="blue.500" thickness="4px" speed="0.65s" />
-      </Flex>
+      <Layout>
+        <Flex
+          position="absolute"
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          zIndex="10"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Spinner size="xl" color="blue.500" thickness="4px" speed="0.65s" />
+        </Flex>
+      </Layout>
     );
   }
 
-  if (!isLoading && isReady) {
+  if (isReady) {
     return <Outlet />;
   }
 

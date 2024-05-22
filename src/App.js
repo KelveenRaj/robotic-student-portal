@@ -12,9 +12,7 @@ import IndexPage from "./pages/IndexPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import SignUpPage from "./pages/SignUpPage";
-// import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
-// import Test from "./pages/TestPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import NotFound from "./pages/404";
 
@@ -31,9 +29,8 @@ const router = createBrowserRouter(
 
       {/* protected routes */}
       <Route element={<PrivateRoute />}>
-        <Route path="dashboard" element={<NotFound />} />
+        <Route path="dashboard" element={<NotFound />} /> {/* temporary */}
         <Route path="profile" element={<Profile />} />
-        <Route path="test" element={<NotFound />} />
       </Route>
     </Route>
   )

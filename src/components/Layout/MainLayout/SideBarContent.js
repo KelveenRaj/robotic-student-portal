@@ -8,15 +8,14 @@ import {
   useColorModeValue,
   Image,
 } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiCompass, FiStar } from "react-icons/fi";
+import { FiHome, FiCompass, FiStar } from "react-icons/fi";
 import NavItem from "./NavItem";
 
 const SidebarContent = ({ onClose, ...props }) => {
   const LinkItems = [
     { name: "Dashboard", icon: FiHome, path: "/dashboard" },
-    { name: "Test", icon: FiTrendingUp, path: "/test" },
-    { name: "Explore", icon: FiCompass, path: "/dashboard" },
-    { name: "Past competitions", icon: FiStar, path: "/dashboard" },
+    { name: "Achievements", icon: FiStar, path: "/dashboard" },
+    { name: "Competitions", icon: FiCompass, path: "/dashboard" },
   ];
 
   return (

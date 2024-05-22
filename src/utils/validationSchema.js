@@ -67,6 +67,10 @@ const signUpSchema = Yup.object().shape({
       /^(\+?6?01)[02-46-9]-*[0-9]{7}$|^(\+?6?01)[1]-*[0-9]{8}$/,
       "Invalid phone number. Please use a valid Malaysian phone number."
     ),
+  size: Yup.string().required("T-Shirt size is required"),
+  parentConsent: Yup.boolean()
+    .oneOf([true], "Parent consent is required")
+    .required("Parent consent is required"),
 });
 
 const verifySchema = Yup.object().shape({

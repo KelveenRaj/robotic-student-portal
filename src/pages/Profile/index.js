@@ -9,7 +9,6 @@ import {
   Input,
   Stack,
   useColorModeValue,
-  Button,
   Grid,
 } from "@chakra-ui/react";
 import Layout from "../../components/Layout/MainLayout";
@@ -17,25 +16,13 @@ import Layout from "../../components/Layout/MainLayout";
 const Profile = () => {
   const userData = useSelector(makeSelectUserData());
   const [profileData, setProfileData] = useState({});
-  const [editable, setEditable] = useState(false);
+  const [editable] = useState(false);
 
   useEffect(() => {
     if (userData) {
       setProfileData(userData);
     }
   }, [userData]);
-
-  const handleEditClick = () => {
-    setEditable(!editable);
-  };
-
-  //   const handleChange = (e) => {
-  //     const { id, value } = e.target;
-  //     setUserData((prevData) => ({
-  //       ...prevData,
-  //       [id]: value,
-  //     }));
-  //   };
 
   return (
     <Layout>
@@ -56,7 +43,6 @@ const Profile = () => {
               _placeholder={{ color: "gray.500" }}
               type="text"
               value={profileData?.fullName?.toUpperCase()}
-              //   onChange={handleChange}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -69,7 +55,6 @@ const Profile = () => {
                 _placeholder={{ color: "gray.500" }}
                 type="text"
                 value={profileData?.race?.toUpperCase()}
-                //   onChange={handleChange}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -80,7 +65,6 @@ const Profile = () => {
                 _placeholder={{ color: "gray.500" }}
                 type="text"
                 value={profileData?.nationality?.toUpperCase()}
-                //   onChange={handleChange}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -93,7 +77,6 @@ const Profile = () => {
                 _placeholder={{ color: "gray.500" }}
                 type="text"
                 value={profileData?.nric?.toUpperCase()}
-                //   onChange={handleChange}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -105,7 +88,6 @@ const Profile = () => {
                 _placeholder={{ color: "gray.500" }}
                 type="text"
                 value={profileData?.passport?.toUpperCase()}
-                //   onChange={handleChange}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -118,7 +100,6 @@ const Profile = () => {
                 _placeholder={{ color: "gray.500" }}
                 type="text"
                 value={profileData?.gender?.toUpperCase()}
-                //   onChange={handleChange}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -129,7 +110,6 @@ const Profile = () => {
                 _placeholder={{ color: "gray.500" }}
                 type="text"
                 value={profileData?.dob?.toUpperCase()}
-                //   onChange={handleChange}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -142,7 +122,6 @@ const Profile = () => {
               _placeholder={{ color: "gray.500" }}
               type="text"
               value={profileData?.school?.toUpperCase()}
-              //   onChange={handleChange}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -154,7 +133,6 @@ const Profile = () => {
               _placeholder={{ color: "gray.500" }}
               type="text"
               value={profileData?.moeEmail || "-"}
-              //   onChange={handleChange}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -166,22 +144,38 @@ const Profile = () => {
               _placeholder={{ color: "gray.500" }}
               type="text"
               value={profileData?.contact?.toUpperCase() || "-"}
-              //   onChange={handleChange}
               isReadOnly={!editable}
             />
           </FormControl>
 
-          <FormControl>
-            <FormLabel>Centre</FormLabel>
-            <Input
-              placeholder="centre"
-              _placeholder={{ color: "gray.500" }}
-              type="text"
-              value={profileData?.center?.toUpperCase() || "-"}
-              //   onChange={handleChange}
-              isReadOnly={!editable}
-            />
-          </FormControl>
+          <Grid
+            templateColumns="calc(65% - 8px) calc(35% - 8px)"
+            gap={4}
+            w="100%"
+          >
+            <FormControl>
+              <FormLabel>Centre</FormLabel>
+              <Input
+                placeholder="centre"
+                _placeholder={{ color: "gray.500" }}
+                type="text"
+                value={profileData?.centerName?.toUpperCase() || "-"}
+                isReadOnly={!editable}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>T-Shirt Size</FormLabel>
+              <Input
+                placeholder="size"
+                _placeholder={{ color: "gray.500" }}
+                type="text"
+                value={profileData?.size?.toUpperCase()}
+                isReadOnly={!editable}
+              />
+            </FormControl>
+          </Grid>
+
           <Heading
             lineHeight={1.1}
             fontSize={{ base: "xl", sm: "2xl" }}
@@ -196,7 +190,6 @@ const Profile = () => {
               _placeholder={{ color: "gray.500" }}
               type="text"
               value={profileData?.parentName?.toUpperCase() || "-"}
-              //   onChange={handleChange}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -207,7 +200,6 @@ const Profile = () => {
               _placeholder={{ color: "gray.500" }}
               type="text"
               value={profileData?.relationship?.toUpperCase() || "-"}
-              //   onChange={handleChange}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -218,7 +210,6 @@ const Profile = () => {
               _placeholder={{ color: "gray.500" }}
               type="text"
               value={profileData?.parentEmail || "-"}
-              //   onChange={handleChange}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -229,16 +220,9 @@ const Profile = () => {
               _placeholder={{ color: "gray.500" }}
               type="text"
               value={profileData?.parentContact?.toUpperCase() || "-"}
-              //   onChange={handleChange}
               isReadOnly={!editable}
             />
           </FormControl>
-
-          <Flex justify={"center"}>
-            <Button onClick={handleEditClick} minWidth={"250px"}>
-              {editable ? "Save" : "Edit"}
-            </Button>
-          </Flex>
         </Stack>
       </Flex>
     </Layout>
