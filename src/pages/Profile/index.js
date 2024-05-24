@@ -176,6 +176,17 @@ const Profile = () => {
             </FormControl>
           </Grid>
 
+          <FormControl>
+            <FormLabel>Student Level</FormLabel>
+            <Input
+              placeholder="level"
+              _placeholder={{ color: "gray.500" }}
+              type="text"
+              value={profileData?.level?.toUpperCase() || "-"}
+              isReadOnly={!editable}
+            />
+          </FormControl>
+
           <Heading
             lineHeight={1.1}
             fontSize={{ base: "xl", sm: "2xl" }}

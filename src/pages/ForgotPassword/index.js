@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -55,6 +56,7 @@ const ForgotPassword = () => {
     resetPasswordWithOTP(currentEmail, newPassword, otp)
       .then(() => {
         navigate("/login");
+        toast.success("Reset password successful");
       })
       .catch((err) => {
         setError(err);

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import NodeRSA from "node-rsa";
 import { useFormik } from "formik";
@@ -124,6 +125,7 @@ const SignUpPage = () => {
         setLoading(false);
         actions.resetForm();
         navigate("/login");
+        toast.success("Sign-Up Successful");
       }
     } catch (error) {
       setLoading(false);
