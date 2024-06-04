@@ -1,20 +1,21 @@
 import React from "react";
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
   Route,
   RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
 } from "react-router-dom";
 
-import AuthLayout from "./components/Layout/AuthLayout";
-import PrivateRoute from "./components/PrivateRoute";
 import IndexPage from "./pages/IndexPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import SignUpPage from "./pages/SignUpPage";
-import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
-import NotFound from "./pages/404";
+import PrivateRoute from "./components/PrivateRoute";
+import AuthLayout from "./components/Layout/AuthLayout";
+import Profile from "./pages/Profile";
+import Dashboard from "./pages/Dashboard";
+import Achievements from "./pages/Achievements";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,8 +30,10 @@ const router = createBrowserRouter(
 
       {/* protected routes */}
       <Route element={<PrivateRoute />}>
-        <Route path="dashboard" element={<NotFound />} /> {/* temporary */}
+        <Route path="dashboard" element={<Dashboard />} /> {/* temporary */}
         <Route path="profile" element={<Profile />} />
+        <Route path="achievements" element={<Achievements />} />
+        <Route path="competitions" element={<Dashboard />} />
       </Route>
     </Route>
   )

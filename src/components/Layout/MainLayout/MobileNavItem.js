@@ -33,8 +33,12 @@ const MobileNav = ({ onOpen, onLogout, onClickProfile, ...props }) => {
       setCurrentPage("Test");
     } else if (currentLocation === "/profile") {
       setCurrentPage("Profile");
+    } else if (currentLocation === "/achievements") {
+      setCurrentPage("Achievements");
+    } else if (currentLocation === "/competitions") {
+      setCurrentPage("Competitions");
     } else {
-      setCurrentPage("unknown");
+      setCurrentPage("");
     }
   }, [location]);
 

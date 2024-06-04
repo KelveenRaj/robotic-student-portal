@@ -14,8 +14,8 @@ import NavItem from "./NavItem";
 const SidebarContent = ({ onClose, ...props }) => {
   const LinkItems = [
     { name: "Dashboard", icon: FiHome, path: "/dashboard" },
-    { name: "Achievements", icon: FiStar, path: "/dashboard" },
-    { name: "Competitions", icon: FiCompass, path: "/dashboard" },
+    { name: "Achievements", icon: FiStar, path: "/achievements" },
+    { name: "Competitions", icon: FiCompass, path: "/competitions" },
   ];
 
   return (

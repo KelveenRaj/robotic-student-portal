@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   userData: {},
+  token: null,
 };
 
 const appSlice = createSlice({
@@ -11,15 +12,16 @@ const appSlice = createSlice({
     saveUserData(state, action) {
       state.userData = action.payload;
     },
-    resetUserData(state) {
-      state.userData = null;
+    saveToken(state, action) {
+      state.token = action.payload;
     },
     resetApp(state) {
       state.userData = null;
+      state.token = null;
       localStorage.removeItem("token");
     },
   },
 });
 
-export const { saveUserData, resetUserData, resetApp } = appSlice.actions;
+export const { saveUserData, saveToken, resetApp } = appSlice.actions;
 export default appSlice.reducer;

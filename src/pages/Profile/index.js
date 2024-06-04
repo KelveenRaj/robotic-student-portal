@@ -24,6 +24,8 @@ const Profile = () => {
     }
   }, [userData]);
 
+  const getValue = (field) => profileData[field] || "-";
+
   return (
     <Layout>
       <Flex
@@ -42,7 +44,7 @@ const Profile = () => {
               placeholder="fullName"
               _placeholder={{ color: "gray.500" }}
               type="text"
-              value={profileData?.fullName?.toUpperCase()}
+              value={getValue("fullName").toUpperCase()}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -54,7 +56,7 @@ const Profile = () => {
                 placeholder="race"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
-                value={profileData?.race?.toUpperCase()}
+                value={getValue("race").toUpperCase()}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -64,19 +66,19 @@ const Profile = () => {
                 placeholder="nationality"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
-                value={profileData?.nationality?.toUpperCase()}
+                value={getValue("nationality").toUpperCase()}
                 isReadOnly={!editable}
               />
             </FormControl>
           </Grid>
-          {profileData?.nationality === "malaysia" ? (
+          {profileData?.nationality?.toLowerCase() === "malaysia" ? (
             <FormControl>
               <FormLabel>My Kad / NRIC</FormLabel>
               <Input
                 placeholder="nric"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
-                value={profileData?.nric?.toUpperCase()}
+                value={getValue("nric").toUpperCase()}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -87,7 +89,7 @@ const Profile = () => {
                 placeholder="passport"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
-                value={profileData?.passport?.toUpperCase()}
+                value={getValue("passport").toUpperCase()}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -99,7 +101,7 @@ const Profile = () => {
                 placeholder="gender"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
-                value={profileData?.gender?.toUpperCase()}
+                value={getValue("gender").toUpperCase()}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -109,7 +111,7 @@ const Profile = () => {
                 placeholder="dob"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
-                value={profileData?.dob?.toUpperCase()}
+                value={getValue("dob").toUpperCase()}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -121,7 +123,7 @@ const Profile = () => {
               placeholder="school"
               _placeholder={{ color: "gray.500" }}
               type="text"
-              value={profileData?.school?.toUpperCase()}
+              value={getValue("school").toUpperCase()}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -132,7 +134,7 @@ const Profile = () => {
               placeholder="moe email"
               _placeholder={{ color: "gray.500" }}
               type="text"
-              value={profileData?.moeEmail || "-"}
+              value={getValue("moeEmail")}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -143,7 +145,7 @@ const Profile = () => {
               placeholder="contact number"
               _placeholder={{ color: "gray.500" }}
               type="text"
-              value={profileData?.contact?.toUpperCase() || "-"}
+              value={getValue("contact").toUpperCase()}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -159,7 +161,7 @@ const Profile = () => {
                 placeholder="centre"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
-                value={profileData?.centerName?.toUpperCase() || "-"}
+                value={getValue("centerName").toUpperCase()}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -170,7 +172,7 @@ const Profile = () => {
                 placeholder="size"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
-                value={profileData?.size?.toUpperCase()}
+                value={getValue("size").toUpperCase()}
                 isReadOnly={!editable}
               />
             </FormControl>
@@ -182,7 +184,7 @@ const Profile = () => {
               placeholder="level"
               _placeholder={{ color: "gray.500" }}
               type="text"
-              value={profileData?.level?.toUpperCase() || "-"}
+              value={getValue("levelName").toUpperCase()}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -200,7 +202,7 @@ const Profile = () => {
               placeholder="parentName"
               _placeholder={{ color: "gray.500" }}
               type="text"
-              value={profileData?.parentName?.toUpperCase() || "-"}
+              value={getValue("parentName").toUpperCase()}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -210,7 +212,7 @@ const Profile = () => {
               placeholder="relationship"
               _placeholder={{ color: "gray.500" }}
               type="text"
-              value={profileData?.relationship?.toUpperCase() || "-"}
+              value={getValue("relationship").toUpperCase()}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -220,7 +222,7 @@ const Profile = () => {
               placeholder="parentEmail"
               _placeholder={{ color: "gray.500" }}
               type="text"
-              value={profileData?.parentEmail || "-"}
+              value={getValue("parentEmail")}
               isReadOnly={!editable}
             />
           </FormControl>
@@ -230,7 +232,7 @@ const Profile = () => {
               placeholder="parentContact"
               _placeholder={{ color: "gray.500" }}
               type="text"
-              value={profileData?.parentContact?.toUpperCase() || "-"}
+              value={getValue("parentContact").toUpperCase()}
               isReadOnly={!editable}
             />
           </FormControl>

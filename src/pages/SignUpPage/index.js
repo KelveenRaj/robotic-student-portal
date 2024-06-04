@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import NodeRSA from "node-rsa";
@@ -24,6 +24,7 @@ import {
   UnorderedList,
   ListItem,
   Checkbox,
+  Stack,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
@@ -44,6 +45,7 @@ const SignUpPage = () => {
   const [isVerify, setIsVerify] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeCentres, setActiveCentres] = useState(null);
+  const fetchCenterOnMount = useRef(false);
 
   useEffect(() => {
     const fetchCenter = async () => {
@@ -55,7 +57,10 @@ const SignUpPage = () => {
       }
     };
 
-    fetchCenter();
+    if (!fetchCenterOnMount.current) {
+      fetchCenter();
+      fetchCenterOnMount.current = true;
+    }
   }, []);
 
   const handleNextStep = () => {
@@ -355,6 +360,21 @@ const SignUpPage = () => {
                   <Text as="span" color="red">
                     *
                   </Text>
+                  <Stack spacing={4}>
+                    <Text fontSize="14px" fontWeight="500">
+                      I hereby consent to my child participating in the STEAM
+                      Cup + Membership in line with the STEAM Cup Malaysia
+                      program. I confirm that all details are correct and I am
+                      able to give parental consent for my child to participate
+                      in all events carried out by STEAM Cup Malaysia, organized
+                      by HongQin Sdn. Bhd.
+                    </Text>
+                    <Text fontSize="14px" fontWeight="500">
+                      I acknowledge that STEAM Cup Malaysia is not responsible
+                      for providing adult supervision for my child in all
+                      events.
+                    </Text>
+                  </Stack>
                 </FormLabel>
                 <Box display="flex" alignItems="center">
                   <Checkbox
@@ -362,10 +382,7 @@ const SignUpPage = () => {
                     isChecked={signUpFormik.values.parentConsent}
                     onChange={signUpFormik.handleChange}
                   />
-                  <Text marginLeft={4}>
-                    I consent to providing my data and the terms and conditions
-                    set by STEAM CUP +
-                  </Text>
+                  <Text marginLeft={4}>Yes</Text>
                 </Box>
                 <FormErrorMessage>
                   {signUpFormik.errors.parentConsent}
@@ -679,7 +696,7 @@ const SignUpPage = () => {
                   {...signUpFormik.getFieldProps("center")}
                 >
                   {activeCentres &&
-                    activeCentres.data.map((center) => (
+                    activeCentres?.data?.map((center) => (
                       <option key={center.id} value={center.id}>
                         {center.name}
                       </option>
